@@ -5,7 +5,18 @@ const cors = require('cors');
 require('dotenv').config() //required to use env
 const PORT = 8000;
 
+
+
+
 const app = express();
+
+
+app.use(cors({
+    origin: 'http://localhost:3000', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
+
+
 const LocationRouter = require("./routes/locationRouters.js")
 const BhkRouter = require("./routes/bhkRouter.js")
 const PredictRouter = require("./routes/predictRouter.js")

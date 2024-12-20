@@ -98,5 +98,5 @@ if __name__ == "__main__":
     bhk = int(sys.argv[4])
     # Call the prediction function and print the result
     prediction = predict_price(location, sqft, bath, bhk)
-    # print("The result of prediction is {}".format(prediction))
+    # print(predict_price('2nd Phase Judicial Layout', 1000, 3, 3))
     print(prediction)
