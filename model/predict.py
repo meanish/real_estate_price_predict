@@ -43,14 +43,24 @@ import numpy as np
 import pickle
 import pandas as pd
 import json
+import warnings
+import os
 
-with open('columns.json', 'r') as f:
+# This is to import json for nodejs using pythoshell
+script_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(script_dir, "columns.json")
+
+# avaid warnings
+warnings.filterwarnings(
+    "ignore", message="X does not have valid feature names")
+
+with open(file_path, 'r') as f:
     loc_data = json.load(f)
     data_columns = loc_data['data-columns']
 
 
-# Update with the actual model file location
-model_file = 'banglore_home_pricess_model.pickle'
+# import the model
+model_file = os.path.join(script_dir, 'banglore_home_pricess_model.pickle')
 lr = pickle.load(open(model_file, 'rb'))
 
 # Assuming you have a feature set 'X' (with all columns including 'location', 'sqft', etc.)
@@ -60,17 +70,21 @@ lr = pickle.load(open(model_file, 'rb'))
 def predict_price(location, sqft, bath, bhk):
     # Logic to handle the feature preprocessing
     # Assuming X is your feature DataFrame
-    print(location, sqft, len(data_columns))
+    # print(location, sqft, len(data_columns),
+    #       data_columns, data_columns.index(location))
 
     # Create a zeroed array to hold feature values
     x = np.zeros(len(data_columns) + 3)
+    # print(x)
     x[0] = sqft
     x[1] = bath
     x[2] = bhk
 
     if location in data_columns:
         loc_index = data_columns.index(location)
+        # print(loc_index)
         x[loc_index + 3] = 1
+        # print(x)
 
     return round(lr.predict([x])[0], 2)
 
@@ -78,11 +92,11 @@ def predict_price(location, sqft, bath, bhk):
 # Main block to allow execution from command-line arguments
 if __name__ == "__main__":
     import sys
-    # location = sys.argv[1]
-    # sqft = float(sys.argv[2])
-    # bath = int(sys.argv[3])
-    # bhk = int(sys.argv[4])
-
+    location = sys.argv[1]
+    sqft = float(sys.argv[2])
+    bath = int(sys.argv[3])
+    bhk = int(sys.argv[4])
     # Call the prediction function and print the result
-    # prediction = predict_price(location, sqft, bath, bhk)
-    print(predict_price('Indira Nagar', 1000, 3, 3))
+    prediction = predict_price(location, sqft, bath, bhk)
+    # print("The result of prediction is {}".format(prediction))
+    print(prediction)

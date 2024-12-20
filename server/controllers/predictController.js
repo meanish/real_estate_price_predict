@@ -6,8 +6,10 @@ const findprice = async (req, res) => {
 
     try {
 
-        const predictStatus = Predict.find(req)
-        res.status(200).json({ data: predictStatus, success: true });
+        const predictStatus = await Predict.find(req,res)
+        console.log("OPredict", predictStatus)
+        if (predictStatus?.success)
+            res.status(200).json({ data: "okay", success: true });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
